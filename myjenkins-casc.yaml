@@ -6,33 +6,65 @@ jenkins:
     standard:
       excludeClientIPFromCrumb: false
   disableRememberMe: false
+  disabledAdministrativeMonitors:
+  - "jenkins.diagnostics.SecurityIsOffMonitor"
+  - "jenkins.diagnostics.RootUrlNotSetMonitor"
+  - "jenkins.security.ResourceDomainRecommendation"
+  - "jenkins.diagnostics.ControllerExecutorsAgents"
   labelAtoms:
   - name: "agent"
+  - name: "agent1"
+  - name: "agent2"
   - name: "built-in"
-  - name: "devops"
+  - name: "java17"
+  labelString: "agent"
   markupFormatter: "plainText"
   mode: NORMAL
   myViewsTabBar: "standard"
   nodes:
   - permanent:
-      labelString: "agent devops"
+      labelString: "agent1 java17"
       launcher:
         ssh:
-          credentialsId: "build-agent-creds"
-          host: "agent"
+          credentialsId: "jenkins-agent-ssh"
+          host: "agent1"
+          javaPath: "/opt/java/openjdk/bin/java"
           port: 22
           sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
-      name: "agent"
+      name: "agent1"
+      nodeDescription: "Slave build agent to run builds via SSH"
       remoteFS: "/home/jenkins/agent"
       retentionStrategy: "always"
   - permanent:
       labelString: "agent17"
       launcher:
         ssh:
-          credentialsId: "build-agent-creds"
+          credentialsId: "jenkins-agent-ssh"
           host: "agent17"
+          javaPath: "/opt/java/openjdk/bin/java"
           port: 22
           sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
       name: "agent17"
+      nodeDescription: "Slave build agent to run builds via SSH"
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"      
+  - permanent:
+      labelString: "agent2 java17"
+      launcher:
+        ssh:
+          credentialsId: "prag"
+          host: "agent2"
+          javaPath: "/opt/java/openjdk/bin/java"
+          port: 22
+          sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+      name: "agent2"
+      nodeDescription: "Slave build agent to run builds via SSH"
+      nodeProperties:
+      - envVars:
+          env:
+          - key: "M2_HOME"
+            value: "/opt/maven"
+          - key: "PATH"
+            value: "/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/maven/bin:/opt/gradle/bin:/opt/sonar-scanner/bin:/home/zap"
       remoteFS: "/home/jenkins/agent"
       retentionStrategy: "always"
